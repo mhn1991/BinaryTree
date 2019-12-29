@@ -1,0 +1,13 @@
+struct Tree<'a,T>{
+    previous : Option<&'a mut Node<T>>,
+    current : Option<&'a mut Node<T>>,
+    next : Option<&'a mut Node<T>>
+}
+
+struct Node<T>{
+    data: T
+}
+
+fn main() {
+    
+}
