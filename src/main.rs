@@ -1,34 +1,38 @@
-struct Tree<'a,T>{
-    left : Option<&'a mut Node<T>>,
-    node : Option<&'a mut Node<T>>,
-    right : Option<&'a mut Node<T>>
+#[derive(Debug)]
+struct Tree<'a, T> {
+    left: Option<&'a Tree<'a, T>>,
+    value: Option<&'a T>,
+    right: Option<&'a Tree<'a, T>>,
 }
 
-struct Node<T>{
-    data: T
-}
+impl<'a> Tree<'a, i32> {
+    fn init() -> Tree<'a, i32> {
+        Tree {
+            left: None,
+            value: None,
+            right: None,
+        }
+    }
 
+    fn insert(&'a mut self, value: &'a i32) -> &'a Tree<'a, i32> {
+        match self.value {
+            // it means we should insert in root
+            None => {
+                self.value = Some(value);
+                return self;
+            }
+            Some(node) => {
+		//we should go right
+		if node.value < value {
 
-impl Node<i32>{
-    fn set(value:i32) -> Node<i32>{
-	let node = Node{
-	    data : value,
-	};
-	node
+		}
+                return self;
+            }
+        }
     }
 }
 
-
-impl<'a> Tree<'a,i32>{
-    fn setRoot(node: &'a mut Node<i32>) -> Tree<'a,i32>{
-	let tree = Tree{
-	    left : None,
-	    node: Some(node),
-	    right:None,
-	};
-	tree
-    }
-}
 fn main() {
-    let mut b = Tree::setRoot(&mut (Node::set(1)));
+    let mut b = Tree::init();
+    println!("{:?}", b.insert(&1));
 }

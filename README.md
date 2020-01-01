@@ -1,2 +1,2 @@
-# Binary Tree implementation in Rust
-## data Structure definition 
+# Binary Tree Implementation In Rust
+## Data Structure Definition 
