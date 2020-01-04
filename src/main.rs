@@ -1,7 +1,10 @@
+extern crate typed_arena;
+use typed_arena::Arena;
+
 #[derive(Debug)]
 struct Tree<'a, T> {
     left: Option<&'a Tree<'a, T>>,
-    value: Option<&'a T>,
+    value: Option<T>,
     right: Option<&'a Tree<'a, T>>,
 }
 
@@ -14,25 +17,27 @@ impl<'a> Tree<'a, i32> {
         }
     }
 
-    fn insert(&'a mut self, value: &'a i32) -> &'a Tree<'a, i32> {
+    fn insert(&mut self, arena: &'a Arena<Tree<'a,i32>> ,value: i32) -> bool {
         match self.value {
-            // it means we should insert in root
             None => {
                 self.value = Some(value);
-                return self;
+                return true;
             }
-            Some(node) => {
-		//we should go right
-		if node.value < value {
-
-		}
-                return self;
+            Some(val) => {
+                if val < value {
+                    let mut tmp = arena.alloc(Tree{left:None,value:Some(value),right:None});
+                    self.right = Some(tmp);
+                }
+                return false;
             }
         }
     }
 }
 
 fn main() {
+    let arena = Arena::new();
     let mut b = Tree::init();
-    println!("{:?}", b.insert(&1));
+    b.insert(&arena,1);
+    b.insert(&arena,2);
+    println!("{:?}", b);
 }
