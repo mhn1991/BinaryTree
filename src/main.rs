@@ -3,9 +3,9 @@ use typed_arena::Arena;
 
 #[derive(Debug)]
 struct Tree<'a, T> {
-    left: Option<&'a Tree<'a, T>>,
+    left: Option<&'a mut Tree<'a, T>>,
     value: Option<T>,
-    right: Option<&'a Tree<'a, T>>,
+    right: Option<&'a mut Tree<'a, T>>,
 }
 
 impl<'a> Tree<'a, i32> {
@@ -17,18 +17,30 @@ impl<'a> Tree<'a, i32> {
         }
     }
 
-    fn insert(&mut self, arena: &'a Arena<Tree<'a,i32>> ,value: i32) -> bool {
+    fn insert(&mut self, arena: &'a Arena<Tree<'a, i32>>, value: i32) {
         match self.value {
             None => {
                 self.value = Some(value);
-                return true;
+                //break;
             }
             Some(val) => {
-                if val < value {
-                    let mut tmp = arena.alloc(Tree{left:None,value:Some(value),right:None});
-                    self.right = Some(tmp);
+                // stop case
+                if val < value && self.right.is_none() {
+                    self.right = Some(arena.alloc(Tree {
+                        left: None,
+                        value: Some(value),
+                        right: None,
+                    }));
+                    //break;
                 }
-                return false;
+                if val < value && self.right.is_some() {
+                    match self.right {
+                        Some(ref mut tmp) => {
+                            tmp.insert(arena, value);
+                        }
+                        None => todo!(),
+                    }
+                }
             }
         }
     }
@@ -37,7 +49,11 @@ impl<'a> Tree<'a, i32> {
 fn main() {
     let arena = Arena::new();
     let mut b = Tree::init();
-    b.insert(&arena,1);
-    b.insert(&arena,2);
+    //Tree::insert(&mut b,&arena,1);
+    //Tree::insert(&mut b,&arena,2);
+    //Tree::insert(&mut b,&arena,3);
+    b.insert(&arena, 1);
+    b.insert(&arena, 2);
+    b.insert(&arena, 3);
     println!("{:?}", b);
 }
