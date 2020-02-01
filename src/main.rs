@@ -61,31 +61,29 @@ impl<'a> Tree<'a, i32> {
         }
     }
 
-    fn findMin(&mut self)->Option<i32>{
-	//println!("<--------->");
-	let mut val:Option<i32> = None;
-	if (self.left.as_ref().unwrap().left.is_none()){
-	    val = Some(self.left.as_ref().unwrap().value.unwrap());
-	    //println!("{:?}",self.left.as_ref().unwrap().value);
-	    self.left = None;
-	    //println!("{:?}",val);
-	    //return val;
-	}
-	if val.is_none(){
-	    //println!("---------");
-	    return self.left.as_mut().unwrap().findMin();
-	}
-	//println!("slm {:?}",val);
-	return val;
+    fn findMin(&mut self) -> Option<i32> {
+        //println!("<--------->");
+        let mut val: Option<i32> = None;
+        if (self.left.as_ref().unwrap().left.is_none()) {
+            val = Some(self.left.as_ref().unwrap().value.unwrap());
+            //println!("{:?}",self.left.as_ref().unwrap().value);
+            self.left = None;
+            //println!("{:?}",val);
+            //return val;
+        }
+        if val.is_none() {
+            //println!("---------");
+            return self.left.as_mut().unwrap().findMin();
+        }
+        //println!("slm {:?}",val);
+        return val;
     }
-    
+
     fn del(&mut self, value: i32) {
-	if self.value.unwrap() == value
-	    && self.left.is_some()
-	    && self.right.is_some(){
-		self.value = self.right.as_mut().unwrap().findMin();
-		return;
-	    }
+        if self.value.unwrap() == value && self.left.is_some() && self.right.is_some() {
+            self.value = self.right.as_mut().unwrap().findMin();
+            return;
+        }
         if self.value.unwrap() >= value {
             //stop case for not founding
             if self.left.is_none() {
@@ -146,19 +144,23 @@ impl<'a> Tree<'a, i32> {
                 self.right = None;
                 return;
             }
-	    if(self.right.as_ref().unwrap().value.unwrap() == value
-	       && self.right.as_ref().unwrap().right.is_some()){
-		self.right.as_mut().unwrap().value = self.right.as_ref().unwrap().right.as_ref().unwrap().value;
-		self.right.as_mut().unwrap().right = None;
-		return;
-	    }
-	    if(self.right.as_ref().unwrap().value.unwrap() == value
-               && self.right.as_ref().unwrap().left.is_some()){                                                                   
-                self.right.as_mut().unwrap().value = self.right.as_ref().unwrap().left.as_ref().unwrap().value;
+            if (self.right.as_ref().unwrap().value.unwrap() == value
+                && self.right.as_ref().unwrap().right.is_some())
+            {
+                self.right.as_mut().unwrap().value =
+                    self.right.as_ref().unwrap().right.as_ref().unwrap().value;
+                self.right.as_mut().unwrap().right = None;
+                return;
+            }
+            if (self.right.as_ref().unwrap().value.unwrap() == value
+                && self.right.as_ref().unwrap().left.is_some())
+            {
+                self.right.as_mut().unwrap().value =
+                    self.right.as_ref().unwrap().left.as_ref().unwrap().value;
                 self.right.as_mut().unwrap().left = None;
                 return;
             }
-	    self.right.as_mut().unwrap().del(value);
+            self.right.as_mut().unwrap().del(value);
         }
     }
 }
@@ -172,7 +174,7 @@ fn main() {
     b.insert(&arena, 20);
     b.insert(&arena, 40);
     b.insert(&arena, 60);
-    b.insert(&arena,80);
+    b.insert(&arena, 80);
     //let tmp = b.findMin();
     println!("{:?}\n", b);
     b.del(20);
